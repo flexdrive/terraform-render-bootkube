@@ -110,3 +110,15 @@ variable "apiserver_port" {
   type        = "string"
   default     = "6443"
 }
+
+variable "apiserver_arguments" {
+  description = "List of custom arguments to pass to the apiserver"
+  type        = "list"
+  default     = []
+}
+
+variable "apiserver_aliases" {
+  description = ""
+  type        = "list"
+  default     = []
+}

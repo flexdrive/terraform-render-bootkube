@@ -38,6 +38,7 @@ resource "template_dir" "manifests" {
 
     ca_cert            = "${base64encode(var.ca_certificate == "" ? join(" ", tls_self_signed_cert.kube-ca.*.cert_pem) : var.ca_certificate)}"
     server             = "${format("https://%s:%s", element(var.api_servers, 0), var.apiserver_port)}"
+    apiserver_args     = "${indent(8, join("\n", formatlist("- %s", var.apiserver_arguments)))}"
     apiserver_key      = "${base64encode(tls_private_key.apiserver.private_key_pem)}"
     apiserver_cert     = "${base64encode(tls_locally_signed_cert.apiserver.cert_pem)}"
     serviceaccount_pub = "${base64encode(tls_private_key.service-account.public_key_pem)}"
@@ -80,6 +81,6 @@ data "template_file" "user-kubeconfig" {
     ca_cert      = "${base64encode(var.ca_certificate == "" ? join(" ", tls_self_signed_cert.kube-ca.*.cert_pem) : var.ca_certificate)}"
     kubelet_cert = "${base64encode(tls_locally_signed_cert.kubelet.cert_pem)}"
     kubelet_key  = "${base64encode(tls_private_key.kubelet.private_key_pem)}"
-    server       = "${format("https://%s:%s", element(var.api_servers, 0), var.apiserver_port)}"
+    server       = "${length(var.apiserver_aliases) == 0 ? format("https://%s:%s", element(var.api_servers, 0), var.apiserver_port) : format("https://%s:8443", element(var.apiserver_aliases, 0))}"
   }
 }
