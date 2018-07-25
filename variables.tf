@@ -116,9 +116,3 @@ variable "apiserver_arguments" {
   type        = "list"
   default     = []
 }
-
-variable "apiserver_aliases" {
-  description = ""
-  type        = "list"
-  default     = []
-}
